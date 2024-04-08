@@ -1,0 +1,13 @@
+--- utf8proc-2.9.0/Makefile-orig	2024-04-07 21:47:01
++++ utf8proc-2.9.0/Makefile	2024-04-07 21:47:08
+@@ -1,8 +1,8 @@
+ # libutf8proc Makefile
+ 
+ # programs
+-AR?=ar
+-CC?=gcc
++AR?=zig ar
++CC?=zig cc
+ INSTALL=install
+ FIND=find
+ PERL=perl

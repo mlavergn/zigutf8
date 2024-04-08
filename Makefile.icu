@@ -1,0 +1,42 @@
+###############################################
+#
+# Makefile
+#
+###############################################
+
+.DEFAULT_GOAL := build
+
+###############################################
+
+st:
+	open -a SourceTree .
+
+open:
+	code .
+
+home:
+	open https://github.com/unicode-org/icu/tree/main/icu4c
+
+VERSION = 74-2
+download:
+	curl -L -o icu4c.tgz https://github.com/unicode-org/icu/archive/refs/tags/release-${VERSION}.tar.gz
+
+extract:
+	-rm -rf icu-release-* icu
+	tar -xzvf icu4c.tgz
+	mv icu-release-${VERSION}/icu4c/source icu
+	cd icu; patch -p1 < ../zig-icu.patch
+
+config:
+	export CFLAGS="-DU_CHARSET_IS_UTF8=1 -DU_GNUC_UTF16_STRING=1 -DU_STATIC_IMPLEMENTATION"
+	export CXXFLAGS="-DU_USING_ICU_NAMESPACE=0 -std=gnu++11 -DU_CHARSET_IS_UTF8=1 -DU_GNUC_UTF16_STRING=1 -DU_HAVE_CHAR16_T=1 -DUCHAR_TYPE=char16_t -Wall --std=c++11 -DU_STATIC_IMPLEMENTATION -static-libstdc++ -fno-exceptions"
+	export CPPFLAGS="-DU_DISABLE_RENAMING=1 -DU_CHARSET_IS_UTF8=1 -DU_STATIC_IMPLEMENTATION"
+	export LDFLAGS="-std=gnu++11"
+	cd icu; ./runConfigureICU zig prefix=${PWD}/dist -enable-static -disable-shared --disable-renaming
+
+build:
+	cd icu; make -j
+	cd icu; make install
+
+run:
+	zig run example.zig

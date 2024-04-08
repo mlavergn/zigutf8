@@ -1,0 +1,33 @@
+###############################################
+#
+# Makefile
+#
+###############################################
+
+.DEFAULT_GOAL := build
+
+###############################################
+
+st:
+	open -a SourceTree .
+
+open:
+	code .
+
+home:
+	open https://github.com/JuliaStrings/utf8proc
+
+VERSION = 2.9.0
+download:
+	curl -L -o utf8proc.tgz https://github.com/JuliaStrings/utf8proc/archive/refs/tags/v${VERSION}.tar.gz
+
+extract:
+	-rm -rf utf8proc
+	tar -xzvf utf8proc.tgz
+	cd utf8proc-${VERSION}; patch -p1 < ../zig-utf8proc.patch
+
+build:
+	cd utf8proc-${VERSION}; make
+
+run:
+	zig run example.zig

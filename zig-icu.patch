@@ -1,0 +1,27 @@
+--- icu/runConfigureICU	2023-12-08 21:30:05
++++ icu/runConfigureICU	2024-04-07 17:06:54
+@@ -360,6 +360,12 @@
+         THE_COMP="QNX cc"
+         CC=qcc; export CC
+         CXX=QCC; export CXX
++        ;;
++    zig)
++        THE_OS="MacOS X (Darwin)"
++        THE_COMP="the Zig compiler"
++        CC=zig cc; export CC
++        CXX=zig c++; export CXX
+         ;;
+     zOS)
+         THE_OS="z/OS (OS/390)"
+--- icu/common/unicode/uconfig.h	2024-04-07 17:20:53
++++ icu/common/unicode/uconfig.h	2024-04-07 17:20:48
+@@ -17,6 +17,9 @@
+ #ifndef __UCONFIG_H__
+ #define __UCONFIG_H__
+ 
++#define U_DISABLE_RENAMING  1
++#define U_USING_ICU_NAMESPACE 0
++
+ /*!
+  * \file
+  * \brief User-configurable settings
