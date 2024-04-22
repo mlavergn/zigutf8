@@ -4,12 +4,21 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const lib = b.addSharedLibrary(.{
+        .name = "utf8proc",
+        .root_source_file = .{ .path = "utf8proc.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    lib.linkLibC();
+    b.installArtifact(lib);
+
     const bin = b.addExecutable(.{
         .name = "example",
         .root_source_file = .{ .path = "utf8.zig" },
+        .target = target,
+        .optimize = optimize,
     });
-    bin.addIncludeDir("dist/include");
-
     bin.linkSystemLibrary("dist/lib/libicuuc.a");
     bin.linkSystemLibrary("dist/lib/libicui18n.a");
     // bin.linkSystemLibrary("zigutf8/utf8proc-2.9.0/libutf8proc.a");

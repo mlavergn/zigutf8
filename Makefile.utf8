@@ -31,3 +31,10 @@ build:
 
 run:
 	zig run example.zig
+
+transpile:
+	zig translate-c -isystem /usr/include utf8proc-2.9.0/utf8proc.c > utf8proc.zig
+	# zig translate-c -isystem /usr/include utf8proc-2.9.0/utf8proc_data.c > utf8proc_data.zig
+
+zbuild:
+	zig build
